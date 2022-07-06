@@ -1,5 +1,6 @@
 package com.example.meditation.composable.screen
 
+import android.annotation.SuppressLint
 import android.window.SplashScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.meditation.R
+import com.example.meditation.navigation.NavConstants
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SplashScreen(
     navController: NavHostController
@@ -34,7 +39,17 @@ fun SplashScreen(
             modifier = Modifier
                 .size(202.dp, 213.dp),
             painter = painterResource(id = R.drawable.logo_foreground),
-            contentDescription = null
+            contentDescription = null,
+            contentScale = ContentScale.Crop
         )
+    }
+
+    scope.launch {
+        delay(1500)
+        navController.navigate(NavConstants.onboarding) {
+            popUpTo(NavConstants.splash) {
+                inclusive = true
+            }
+        }
     }
 }
