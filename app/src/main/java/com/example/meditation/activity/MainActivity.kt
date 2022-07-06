@@ -1,4 +1,4 @@
-package com.example.meditation
+package com.example.meditation.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
