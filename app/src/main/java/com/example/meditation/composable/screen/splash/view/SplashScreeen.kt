@@ -1,7 +1,6 @@
-package com.example.meditation.composable.screen
+package com.example.meditation.composable.screen.splash.view
 
 import android.annotation.SuppressLint
-import android.window.SplashScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,7 +37,7 @@ fun SplashScreen(
         Image(
             modifier = Modifier
                 .size(202.dp, 213.dp),
-            painter = painterResource(id = R.drawable.logo_foreground),
+            painter = painterResource(id = R.drawable.ic_logo),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )

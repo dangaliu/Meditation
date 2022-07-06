@@ -1,4 +1,4 @@
-package com.example.meditation.composable.screen
+package com.example.meditation.composable.screen.onboarding.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.meditation.R
 import com.example.meditation.composable.component.AppButton
+import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.appFontFamily
 
 @Composable
@@ -42,20 +43,21 @@ fun OnBoardingScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(70.dp))
+            Spacer(Modifier.height(180.dp))
             Image(
-                painter = painterResource(R.drawable.logo_foreground),
+                painter = painterResource(R.drawable.ic_logo),
                 contentDescription = null,
                 modifier = Modifier
                     .size(191.dp, 199.dp),
             )
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(32.dp))
             Text(
                 text = "ПРИВЕТ",
                 fontFamily = appFontFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = 34.sp,
-                color = Color.White
+                color = Color.White,
+                letterSpacing = 0.sp
             )
             Text(
                 text = "Наслаждайся отборочными.\nБудь внимателен.\n" +
@@ -64,13 +66,16 @@ fun OnBoardingScreen(
                 fontWeight = FontWeight.Medium,
                 fontSize = 20.sp,
                 color = Color.White,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                letterSpacing = 0.sp
             )
-            Spacer(modifier = Modifier.height(45.dp))
+            Spacer(modifier = Modifier.height(95.dp))
             AppButton(
-                onClick = {}
+                onClick = {
+                    navController.navigate(NavConstants.signIn)
+                }
             )
-            Spacer(Modifier.height(15.dp))
+            Spacer(Modifier.height(18.dp))
             Text(
                 text = AnnotatedString(
                     text = "Еще нет аккаунта?",
@@ -78,16 +83,18 @@ fun OnBoardingScreen(
                         fontFamily = appFontFamily,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.White
+                        color = Color.White,
+                        letterSpacing = 0.sp
                     )
                 ).plus(
                     AnnotatedString(
-                        text = "Зарегистрируйтесь",
+                        text = " Зарегистрируйтесь",
                         spanStyle = SpanStyle(
                             fontFamily = appFontFamily,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color.White
+                            color = Color.White,
+                            letterSpacing = 0.sp
                         )
                     )
                 ),
