@@ -43,7 +43,7 @@ fun OnBoardingScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(180.dp))
+            Spacer(Modifier.height(160.dp))
             Image(
                 painter = painterResource(R.drawable.ic_logo),
                 contentDescription = null,
@@ -69,7 +69,7 @@ fun OnBoardingScreen(
                 textAlign = TextAlign.Center,
                 letterSpacing = 0.sp
             )
-            Spacer(modifier = Modifier.height(95.dp))
+            Spacer(modifier = Modifier.height(75.dp))
             AppButton(
                 onClick = {
                     navController.navigate(NavConstants.signIn)
