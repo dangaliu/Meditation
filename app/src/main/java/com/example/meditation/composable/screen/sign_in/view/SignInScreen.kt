@@ -25,9 +25,14 @@ import com.example.meditation.composable.component.AppButton
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
 import com.example.meditation.model.dto.SignInBody
 import com.example.meditation.model.dto.SignInResponse
+import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.BackgroundColor
 import com.example.meditation.ui.theme.PlaceHolder
 import com.example.meditation.ui.theme.appFontFamily
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
@@ -36,8 +41,7 @@ fun SignInScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val vm = signInViewModel
-    val signInResponse = vm.signInResponse.observeAsState(SignInResponse("", "", "", "", "")).value
+    val signInResponse = signInViewModel.signInResponse.observeAsState(SignInResponse("", "", "", "", "")).value
     val context = LocalContext.current
     Box(
         modifier = Modifier
@@ -130,8 +134,13 @@ fun SignInScreen(
                 letterSpacing = 2.sp,
                 onClick = {
                     val body = SignInBody(email, password)
-                    if (vm.isSignInFieldsValid(body)) {
-                        vm.signIn(signInBody = body)
+                    if (signInViewModel.isSignInFieldsValid(body)) {
+                        signInViewModel.signIn(signInBody = body)
+                        navController.navigate(NavConstants.main) {
+                            popUpTo(NavConstants.onboarding) {
+                                inclusive = true
+                            }
+                        }
                     } else {
                         Toast.makeText(context, "Введены некорректные данные", Toast.LENGTH_LONG)
                             .show()

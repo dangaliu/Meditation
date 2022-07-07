@@ -1,11 +1,13 @@
-package com.example.meditation.retrofit
+package com.example.meditation.model.retrofit
 
+import com.example.meditation.model.dto.FeelingResponse
 import com.example.meditation.model.dto.SignInBody
 import com.example.meditation.model.dto.SignInResponse
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface MeditationApi {
@@ -19,5 +21,8 @@ interface MeditationApi {
     }
 
     @POST("user/login")
-    fun signIn(@Body signInBody: SignInBody): Call<SignInResponse>
+    suspend fun signIn(@Body signInBody: SignInBody): Response<SignInResponse>
+
+    @GET("feelings")
+    suspend fun getFeelings(): Response<FeelingResponse>
 }
