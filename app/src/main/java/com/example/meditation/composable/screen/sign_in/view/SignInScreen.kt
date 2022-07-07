@@ -1,5 +1,6 @@
 package com.example.meditation.composable.screen.sign_in.view
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,9 +8,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -18,16 +22,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.meditation.R
 import com.example.meditation.composable.component.AppButton
+import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
+import com.example.meditation.model.dto.SignInBody
+import com.example.meditation.model.dto.SignInResponse
 import com.example.meditation.ui.theme.BackgroundColor
 import com.example.meditation.ui.theme.PlaceHolder
 import com.example.meditation.ui.theme.appFontFamily
 
 @Composable
 fun SignInScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    signInViewModel: SignInViewModel
 ) {
-    var email by remember { mutableStateOf("")}
-    var password by remember { mutableStateOf("")}
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val vm = signInViewModel
+    val signInResponse = vm.signInResponse.observeAsState(SignInResponse("", "", "", "", "")).value
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -116,7 +127,16 @@ fun SignInScreen(
 
             AppButton(
                 text = "Sign in",
-                letterSpacing = 2.sp
+                letterSpacing = 2.sp,
+                onClick = {
+                    val body = SignInBody(email, password)
+                    if (vm.isSignInFieldsValid(body)) {
+                        vm.signIn(signInBody = body)
+                    } else {
+                        Toast.makeText(context, "Введены некорректные данные", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
             )
 
             Spacer(Modifier.height(23.dp))
@@ -137,5 +157,14 @@ fun SignInScreen(
                 letterSpacing = 2.sp
             )
         }
+        Image(
+            painter = painterResource(R.drawable.ic_uzor),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(200.dp),
+            contentScale = ContentScale.FillWidth
+        )
     }
 }
