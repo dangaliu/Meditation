@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -20,10 +21,13 @@ fun FeelingComponent(
     title: String = ""
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.width(62.dp)
     ) {
         Surface(
-            modifier = Modifier.size(62.dp, 65.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(65.dp),
             color = Color.White.copy(0.9f),
             shape = RoundedCornerShape(20.dp)
         ) {
@@ -46,7 +50,10 @@ fun FeelingComponent(
             fontSize = 12.sp,
             fontFamily = appFontFamily,
             fontWeight = FontWeight.Normal,
-            color = Color.White
+            color = Color.White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

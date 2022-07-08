@@ -1,8 +1,11 @@
 package com.example.meditation.composable.screen.main.view
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
@@ -15,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.meditation.composable.component.AppTopBar
+import com.example.meditation.composable.component.QuoteComponent
 import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
 import com.example.meditation.ui.theme.BackgroundColor
@@ -33,6 +37,9 @@ fun MainScreen(
     val name = signInViewModel.signInResponse.observeAsState().value?.nickName ?: ""
     mainViewModel.getFeelings()
     val feelings = mainViewModel.feelings.observeAsState(listOf()).value
+    mainViewModel.getQuotes()
+    val quotes = mainViewModel.quotes.observeAsState(listOf()).value
+    val scrollState = rememberScrollState()
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -51,8 +58,9 @@ fun MainScreen(
     ) {
         Column(
             modifier = Modifier
-                .padding(bottom = it.calculateBottomPadding() + 1.dp, start = 18.dp, end = 18.dp)
+                .padding(bottom = it.calculateBottomPadding() + 1.dp)
                 .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
             Spacer(Modifier.height(25.dp))
             Text(
@@ -60,7 +68,8 @@ fun MainScreen(
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = appFontFamily,
-                color = Color.White
+                color = Color.White,
+                modifier = Modifier.padding(start = 25.dp)
             )
             Spacer(Modifier.height(2.dp))
             Text(
@@ -68,7 +77,8 @@ fun MainScreen(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = appFontFamily,
-                color = Color.White.copy(0.7f)
+                color = Color.White.copy(0.7f),
+                modifier = Modifier.padding(start = 25.dp)
             )
             Spacer(Modifier.height(23.dp))
             LazyRow(
@@ -78,10 +88,22 @@ fun MainScreen(
                         FeelingComponent(feeling.image, feeling.title)
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(start = 25.dp)
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(17.dp)
             )
-            Spacer(modifier = Modifier.height(23.dp))
+            Spacer(modifier = Modifier.height(17.dp))
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 25.dp)
+                    .fillMaxSize()
+            ) {
+                for (quote in quotes) {
+                    QuoteComponent(quote = quote)
+                    Spacer(modifier = Modifier.height(25.dp))
+                }
+            }
         }
     }
 }

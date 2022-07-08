@@ -1,6 +1,7 @@
 package com.example.meditation.model.retrofit
 
 import com.example.meditation.model.dto.FeelingResponse
+import com.example.meditation.model.dto.QuoteResponse
 import com.example.meditation.model.dto.SignInBody
 import com.example.meditation.model.dto.SignInResponse
 import retrofit2.Response
@@ -25,4 +26,7 @@ interface MeditationApi {
 
     @GET("feelings")
     suspend fun getFeelings(): Response<FeelingResponse>
+
+    @GET("quotes")
+    suspend fun getQuotes(): Response<QuoteResponse>
 }

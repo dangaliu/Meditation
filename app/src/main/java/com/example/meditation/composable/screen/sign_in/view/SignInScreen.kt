@@ -163,7 +163,10 @@ fun SignInScreen(
 
             AppButton(
                 text = "Профиль",
-                letterSpacing = 2.sp
+                letterSpacing = 2.sp,
+                onClick = {
+                    navController.navigate(NavConstants.main)
+                }
             )
         }
         Image(
