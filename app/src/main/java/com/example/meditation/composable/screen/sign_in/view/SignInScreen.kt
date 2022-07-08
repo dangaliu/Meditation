@@ -29,19 +29,16 @@ import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.BackgroundColor
 import com.example.meditation.ui.theme.PlaceHolder
 import com.example.meditation.ui.theme.appFontFamily
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
     navController: NavHostController,
-    signInViewModel: SignInViewModel
+    signInViewModel: SignInViewModel,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val signInResponse = signInViewModel.signInResponse.observeAsState(SignInResponse("", "", "", "", "")).value
+    val signInResponse =
+        signInViewModel.signInResponse.observeAsState(SignInResponse("", "", "", "", "")).value
     val context = LocalContext.current
     Box(
         modifier = Modifier
@@ -136,11 +133,7 @@ fun SignInScreen(
                     val body = SignInBody(email, password)
                     if (signInViewModel.isSignInFieldsValid(body)) {
                         signInViewModel.signIn(signInBody = body)
-                        navController.navigate(NavConstants.main) {
-                            popUpTo(NavConstants.onboarding) {
-                                inclusive = true
-                            }
-                        }
+                        signInViewModel.saveUser(body)
                     } else {
                         Toast.makeText(context, "Введены некорректные данные", Toast.LENGTH_LONG)
                             .show()

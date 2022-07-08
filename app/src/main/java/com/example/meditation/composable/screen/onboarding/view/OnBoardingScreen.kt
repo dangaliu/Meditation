@@ -19,13 +19,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.meditation.R
 import com.example.meditation.composable.component.AppButton
+import com.example.meditation.composable.screen.onboarding.viewmodel.OnBoardingViewModel
 import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.appFontFamily
 
 @Composable
 fun OnBoardingScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    onBoardingViewModel: OnBoardingViewModel
 ) {
+    val user = onBoardingViewModel.getUser()
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -72,7 +75,11 @@ fun OnBoardingScreen(
             Spacer(modifier = Modifier.height(75.dp))
             AppButton(
                 onClick = {
-                    navController.navigate(NavConstants.signIn)
+                    navController.navigate(NavConstants.signIn) {
+                        popUpTo(NavConstants.onboarding) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
             Spacer(Modifier.height(18.dp))

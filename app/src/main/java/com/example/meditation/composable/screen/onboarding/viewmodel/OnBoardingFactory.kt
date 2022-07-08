@@ -1,15 +1,14 @@
-package com.example.meditation.composable.screen.sign_in.viewmodel
+package com.example.meditation.composable.screen.onboarding.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.meditation.model.SignInModel
 import com.example.meditation.model.shared_preferences.PrefRepository
 
-class SignInFactory(
-    private val signInModel: SignInModel,
+class OnBoardingFactory(
     private val prefRepository: PrefRepository
 ): ViewModelProvider.Factory {
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return SignInViewModel(signInModel, prefRepository) as T
+        return OnBoardingViewModel(prefRepository) as T
     }
 }
