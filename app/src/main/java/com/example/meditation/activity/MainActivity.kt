@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
@@ -51,14 +52,15 @@ class MainActivity : ComponentActivity() {
         val mainFactory = MainFactory(mainModel)
         val mainViewModel = ViewModelProvider(this, mainFactory)[MainViewModel::class.java]
 
-        Scaffold(
-            scaffoldState = scaffoldState,
+        val innerNavController = rememberNavController()
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
             Navigation(
                 navController = navController,
                 signInViewModel = signInViewModel,
-                mainViewModel = mainViewModel
+                mainViewModel = mainViewModel,
+                innerNavController = innerNavController
             )
         }
     }
