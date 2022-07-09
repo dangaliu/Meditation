@@ -6,6 +6,8 @@ object NavConstants {
     const val onboarding = "onboarding"
     const val signIn = "signIn"
     const val main = "main"
+    const val registration = "registration"
+    const val menu = "menu"
 
     const val avatarRes = "avatarRes"
 

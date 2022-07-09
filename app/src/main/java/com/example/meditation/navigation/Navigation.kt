@@ -7,9 +7,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.meditation.composable.screen.main.view.MainScreen
 import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
+import com.example.meditation.composable.screen.menu.view.MenuScreen
 import com.example.meditation.composable.screen.music.view.MusicScreen
 import com.example.meditation.composable.screen.onboarding.view.OnBoardingScreen
 import com.example.meditation.composable.screen.profile.view.ProfileScreen
+import com.example.meditation.composable.screen.registration.view.RegistrationScreen
 import com.example.meditation.composable.screen.sign_in.view.SignInScreen
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
 import com.example.meditation.composable.screen.splash.view.SplashScreen
@@ -41,6 +43,12 @@ fun Navigation(
                 navController = navController,
                 signInViewModel = signInViewModel
             )
+        }
+        composable(route = NavConstants.registration) {
+            RegistrationScreen(navController = navController)
+        }
+        composable(route = NavConstants.menu) {
+            MenuScreen(navController = navController)
         }
         composable(route = NavConstants.main) {
             MainScreen(

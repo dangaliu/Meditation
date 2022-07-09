@@ -24,7 +24,8 @@ fun QuoteComponent(
         .fillMaxWidth()
         .height(170.dp),
     quote: Quote,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    buttonContent: String = "подробнее"
 ) {
     Card(
         modifier = modifier,
@@ -68,7 +69,7 @@ fun QuoteComponent(
                         .size(138.dp, 39.dp)
                 ) {
                     Text(
-                        text = "подробнее",
+                        text = buttonContent,
                         fontFamily = appFontFamily,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,

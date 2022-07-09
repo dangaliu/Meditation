@@ -103,7 +103,7 @@ fun OnBoardingScreen(
                     )
                 ),
                 modifier = Modifier.clickable {
-
+                    navController.navigate(NavConstants.registration)
                 }
             )
         }

@@ -1,6 +1,7 @@
 package com.example.meditation.composable.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.meditation.R
+import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.appFontFamily
 
 @Composable
@@ -32,9 +34,12 @@ fun AppTopBar(
     ) {
         Image(
             modifier = Modifier
-                .size(23.dp, 18.dp),
+                .size(23.dp, 18.dp)
+                .clickable {
+                    navController.navigate(NavConstants.menu)
+                },
             painter = painterResource(R.drawable.ic_hamburger),
-            contentDescription = null,
+            contentDescription = null
         )
 
         Image(
@@ -44,10 +49,12 @@ fun AppTopBar(
             contentDescription = null
         )
 
-        if(isMain) {
+        if (isMain) {
             AsyncImage(
                 model = avatarRes,
-                modifier = Modifier.size(36.dp).clip(CircleShape),
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape),
                 contentDescription = null
             )
         } else {

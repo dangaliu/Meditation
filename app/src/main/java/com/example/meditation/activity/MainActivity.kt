@@ -4,10 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -73,7 +70,10 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
                 if (currentRoute in bottomItems) {
-                    AppBottomNavigation(navController = navController)
+                    Column {
+                        AppBottomNavigation(navController = navController)
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
                 }
             },
             backgroundColor = BackgroundColor,
@@ -93,13 +93,19 @@ class MainActivity : ComponentActivity() {
                 }
             }
         ) {
-            Navigation(
-                navController = navController,
-                signInViewModel = signInViewModel,
-                mainViewModel = mainViewModel,
-                splashViewModel = splashViewModel,
-                prefRepository = prefRepository
-            )
+            Box(
+                modifier = Modifier
+                    .padding(bottom = it.calculateBottomPadding())
+                    .fillMaxSize()
+            ) {
+                Navigation(
+                    navController = navController,
+                    signInViewModel = signInViewModel,
+                    mainViewModel = mainViewModel,
+                    splashViewModel = splashViewModel,
+                    prefRepository = prefRepository
+                )
+            }
         }
     }
 }

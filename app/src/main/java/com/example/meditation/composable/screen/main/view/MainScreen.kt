@@ -19,6 +19,7 @@ import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
 import com.example.meditation.model.shared_preferences.PrefRepository
 import com.example.meditation.ui.theme.appFontFamily
+import kotlin.text.Typography.quote
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -32,7 +33,7 @@ fun MainScreen(
     mainViewModel.getQuotes()
     val quotes = mainViewModel.quotes.observeAsState(listOf()).value
     val scrollState = rememberScrollState()
-    val feelings = mainViewModel.feelings.observeAsState(listOf()).value
+    var feelings = mainViewModel.feelings.observeAsState(listOf()).value
     val name = if (prefRepository.getName().isNullOrEmpty()) {
         signInViewModel.signInResponse.observeAsState().value?.nickName ?: ""
     } else {
@@ -65,6 +66,7 @@ fun MainScreen(
         Spacer(Modifier.height(23.dp))
         LazyRow(
             content = {
+                feelings = feelings.sortedBy { it.position }
                 items(feelings.size) { index ->
                     val feeling = feelings[index]
                     FeelingComponent(feeling.image, feeling.title)
@@ -80,10 +82,16 @@ fun MainScreen(
                 .padding(horizontal = 25.dp)
                 .fillMaxSize()
         ) {
-            for (quote in quotes) {
-                QuoteComponent(quote = quote)
+
+            quotes.forEachIndexed { index, mQuote ->
+                if (index == 0) {
+                    QuoteComponent(quote = mQuote, buttonContent = "подбробнее")
+                    Spacer(modifier = Modifier.height(25.dp))
+                }
+                QuoteComponent(quote = mQuote)
                 Spacer(modifier = Modifier.height(25.dp))
             }
+
         }
     }
 }
