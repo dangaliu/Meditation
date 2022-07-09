@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.meditation.R
+import com.example.meditation.composable.screen.splash.view.viewmodel.SplashViewModel
 import com.example.meditation.navigation.NavConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,7 +22,8 @@ import kotlinx.coroutines.launch
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SplashScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    splashViewModel: SplashViewModel
 ) {
     val scope = rememberCoroutineScope()
     Box(
@@ -44,10 +46,19 @@ fun SplashScreen(
     }
 
     scope.launch {
+        val user = splashViewModel.getUser()
         delay(1500)
-        navController.navigate(NavConstants.onboarding) {
-            popUpTo(NavConstants.splash) {
-                inclusive = true
+        if (user.email.isNotEmpty() && user.password.isNotEmpty()) {
+            navController.navigate(NavConstants.main) {
+                popUpTo(NavConstants.splash) {
+                    inclusive = true
+                }
+            }
+        } else {
+            navController.navigate(NavConstants.onboarding) {
+                popUpTo(NavConstants.splash) {
+                    inclusive = true
+                }
             }
         }
     }

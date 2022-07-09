@@ -24,6 +24,8 @@ class SignInViewModel(
             val response: Response<SignInResponse> = signInModel.signIn(signInBody)
             if (response.isSuccessful) {
                 signInResponse.postValue(response.body())
+                response.body()?.let { prefRepository.putName(it.nickName) }
+                response.body()?.let { prefRepository.putAvatar(it.avatar) }
             }
         }
     }

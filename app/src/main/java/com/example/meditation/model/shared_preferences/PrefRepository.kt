@@ -21,7 +21,19 @@ class PrefRepository(context: Context) {
         PrefConstants.PREF_PASSWORD.putString(password)
     }
 
+    fun putName(name: String) {
+        PrefConstants.PREF_NAME.putString(name)
+    }
+
+    fun putAvatar(avatar: String) {
+        PrefConstants.PREF_AVATAR.putString(avatar)
+    }
+
     fun getEmail() = PrefConstants.PREF_EMAIL.getString()
 
     fun getPassword() = PrefConstants.PREF_PASSWORD.getString()
+
+    fun getName() = PrefConstants.PREF_NAME.getString()
+
+    fun getAvatar() = PrefConstants.PREF_AVATAR.getString()
 }

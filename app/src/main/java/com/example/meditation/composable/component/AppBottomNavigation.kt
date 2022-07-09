@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.meditation.navigation.BottomNavItem
+import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.BackgroundColor
 
 @Composable
@@ -39,16 +40,21 @@ fun AppBottomNavigation(
             val selected = currentScreen == item.route
             BottomNavigationItem(
                 selected = selected,
-                onClick =  {
+                onClick = {
                     navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
-
-                            restoreState = true
-                            launchSingleTop = true
+//                        navController.graph.startDestinationRoute?.let { route ->
+//                            popUpTo(route) {
+//                                saveState = true
+//                            }
+//
+//                            restoreState = true
+//                            launchSingleTop = true
+//                        }
+                        popUpTo(NavConstants.main) {
+                            saveState = true
                         }
+                        restoreState = true
+                        launchSingleTop = true
                     }
                 },
                 icon = {

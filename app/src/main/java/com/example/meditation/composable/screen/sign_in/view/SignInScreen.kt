@@ -37,8 +37,6 @@ fun SignInScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val signInResponse =
-        signInViewModel.signInResponse.observeAsState(SignInResponse("", "", "", "", "")).value
     val context = LocalContext.current
     Box(
         modifier = Modifier
@@ -134,6 +132,11 @@ fun SignInScreen(
                     if (signInViewModel.isSignInFieldsValid(body)) {
                         signInViewModel.signIn(signInBody = body)
                         signInViewModel.saveUser(body)
+                        navController.navigate(NavConstants.main) {
+                            popUpTo(NavConstants.signIn) {
+                                inclusive = true
+                            }
+                        }
                     } else {
                         Toast.makeText(context, "Введены некорректные данные", Toast.LENGTH_LONG)
                             .show()

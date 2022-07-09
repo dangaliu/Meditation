@@ -4,24 +4,28 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.meditation.composable.component.AppBottomNavigation
+import com.example.meditation.composable.component.AppTopBar
 import com.example.meditation.composable.screen.main.viewmodel.MainFactory
 import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
-import com.example.meditation.composable.screen.onboarding.viewmodel.OnBoardingFactory
-import com.example.meditation.composable.screen.onboarding.viewmodel.OnBoardingViewModel
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInFactory
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
+import com.example.meditation.composable.screen.splash.view.viewmodel.SplashFactory
+import com.example.meditation.composable.screen.splash.view.viewmodel.SplashViewModel
 import com.example.meditation.model.MainModel
 import com.example.meditation.model.SignInModel
 import com.example.meditation.model.shared_preferences.PrefRepository
@@ -57,28 +61,44 @@ class MainActivity : ComponentActivity() {
         val mainFactory = MainFactory(mainModel)
         val mainViewModel = ViewModelProvider(this, mainFactory)[MainViewModel::class.java]
 
-        val onBoardingFactory = OnBoardingFactory(prefRepository)
-        val onBoardingViewModel =
-            ViewModelProvider(this, onBoardingFactory)[OnBoardingViewModel::class.java]
+        val splashFactory = SplashFactory(prefRepository)
+        val splashViewModel = ViewModelProvider(this, splashFactory)[SplashViewModel::class.java]
 
         val bottomItems = listOf<String>(
             "main", "music", "profile"
         )
 
+        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
-                if (navController.currentBackStackEntryAsState().value?.destination?.route in bottomItems) {
+                if (currentRoute in bottomItems) {
                     AppBottomNavigation(navController = navController)
                 }
             },
-            backgroundColor = BackgroundColor
+            backgroundColor = BackgroundColor,
+            topBar = {
+                if (currentRoute in bottomItems) {
+                    Column {
+                        Spacer(modifier = Modifier.height(56.dp))
+                        AppTopBar(
+                            navController = navController,
+                            avatarRes = if (prefRepository.getAvatar().isNullOrEmpty()) {
+                                signInViewModel.signInResponse.observeAsState().value?.avatar ?: ""
+                            } else {
+                                prefRepository.getAvatar()
+                            } ?: ""
+                        )
+                    }
+                }
+            }
         ) {
             Navigation(
                 navController = navController,
                 signInViewModel = signInViewModel,
                 mainViewModel = mainViewModel,
-                onBoardingViewModel = onBoardingViewModel
+                splashViewModel = splashViewModel,
+                prefRepository = prefRepository
             )
         }
     }

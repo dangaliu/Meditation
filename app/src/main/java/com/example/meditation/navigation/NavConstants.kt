@@ -9,7 +9,6 @@ object NavConstants {
 
     const val avatarRes = "avatarRes"
 
-    const val home = "home"
     const val music = "music"
     const val profile = "profile"
 }

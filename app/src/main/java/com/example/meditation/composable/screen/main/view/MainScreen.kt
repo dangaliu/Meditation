@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import com.example.meditation.composable.component.QuoteComponent
 import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
+import com.example.meditation.model.shared_preferences.PrefRepository
 import com.example.meditation.ui.theme.appFontFamily
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -24,14 +25,19 @@ import com.example.meditation.ui.theme.appFontFamily
 fun MainScreen(
     navController: NavHostController,
     mainViewModel: MainViewModel,
-    signInViewModel: SignInViewModel
+    signInViewModel: SignInViewModel,
+    prefRepository: PrefRepository
 ) {
     mainViewModel.getFeelings()
     mainViewModel.getQuotes()
     val quotes = mainViewModel.quotes.observeAsState(listOf()).value
     val scrollState = rememberScrollState()
     val feelings = mainViewModel.feelings.observeAsState(listOf()).value
-    val name = signInViewModel.signInResponse.observeAsState().value?.nickName ?: ""
+    val name = if (prefRepository.getName().isNullOrEmpty()) {
+        signInViewModel.signInResponse.observeAsState().value?.nickName ?: ""
+    } else {
+        prefRepository.getName()
+    }
 
     Column(
         modifier = Modifier
