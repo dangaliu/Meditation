@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.meditation.composable.component.AppBottomNavigation
 import com.example.meditation.composable.screen.main.viewmodel.MainFactory
 import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
 import com.example.meditation.composable.screen.onboarding.viewmodel.OnBoardingFactory
@@ -56,18 +58,26 @@ class MainActivity : ComponentActivity() {
         val mainViewModel = ViewModelProvider(this, mainFactory)[MainViewModel::class.java]
 
         val onBoardingFactory = OnBoardingFactory(prefRepository)
-        val onBoardingViewModel = ViewModelProvider(this, onBoardingFactory)[OnBoardingViewModel::class.java]
+        val onBoardingViewModel =
+            ViewModelProvider(this, onBoardingFactory)[OnBoardingViewModel::class.java]
 
+        val bottomItems = listOf<String>(
+            "main", "music", "profile"
+        )
 
-        val innerNavController = rememberNavController()
-        Box(
-            modifier = Modifier.fillMaxSize()
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                if (navController.currentBackStackEntryAsState().value?.destination?.route in bottomItems) {
+                    AppBottomNavigation(navController = navController)
+                }
+            },
+            backgroundColor = BackgroundColor
         ) {
             Navigation(
                 navController = navController,
                 signInViewModel = signInViewModel,
                 mainViewModel = mainViewModel,
-                innerNavController = innerNavController,
                 onBoardingViewModel = onBoardingViewModel
             )
         }
