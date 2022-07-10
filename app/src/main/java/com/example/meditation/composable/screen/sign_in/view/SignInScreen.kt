@@ -25,6 +25,7 @@ import com.example.meditation.composable.component.AppButton
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
 import com.example.meditation.model.dto.SignInBody
 import com.example.meditation.model.dto.SignInResponse
+import com.example.meditation.model.shared_preferences.PrefRepository
 import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.BackgroundColor
 import com.example.meditation.ui.theme.PlaceHolder
@@ -34,8 +35,9 @@ import com.example.meditation.ui.theme.appFontFamily
 fun SignInScreen(
     navController: NavHostController,
     signInViewModel: SignInViewModel,
+    prefRepository: PrefRepository
 ) {
-    var email by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf(prefRepository.getEmail() ?: "") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
     Box(

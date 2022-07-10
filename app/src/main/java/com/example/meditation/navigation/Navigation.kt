@@ -41,7 +41,8 @@ fun Navigation(
         composable(route = NavConstants.signIn) {
             SignInScreen(
                 navController = navController,
-                signInViewModel = signInViewModel
+                signInViewModel = signInViewModel,
+                prefRepository = prefRepository
             )
         }
         composable(route = NavConstants.registration) {
@@ -62,7 +63,10 @@ fun Navigation(
             MusicScreen()
         }
         composable(route = NavConstants.profile) {
-            ProfileScreen()
+            ProfileScreen(
+                navController = navController,
+                prefRepository = prefRepository
+            )
         }
     }
 }

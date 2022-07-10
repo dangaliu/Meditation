@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,7 +63,16 @@ fun AppTopBar(
                 text = "exit",
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
-                fontFamily = appFontFamily
+                fontFamily = appFontFamily,
+                color = Color.White,
+                modifier = Modifier.clickable {
+                    navController.popBackStack(NavConstants.main, true)
+                    navController.popBackStack(NavConstants.profile, true)
+                    navController.navigate(NavConstants.signIn) {
+                        popUpTo(NavConstants.signIn)
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }

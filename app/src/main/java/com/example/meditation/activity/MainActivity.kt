@@ -26,6 +26,7 @@ import com.example.meditation.composable.screen.splash.view.viewmodel.SplashView
 import com.example.meditation.model.MainModel
 import com.example.meditation.model.SignInModel
 import com.example.meditation.model.shared_preferences.PrefRepository
+import com.example.meditation.navigation.NavConstants
 import com.example.meditation.navigation.Navigation
 import com.example.meditation.ui.theme.BackgroundColor
 import com.example.meditation.ui.theme.MeditationTheme
@@ -87,7 +88,8 @@ class MainActivity : ComponentActivity() {
                                 signInViewModel.signInResponse.observeAsState().value?.avatar ?: ""
                             } else {
                                 prefRepository.getAvatar()
-                            } ?: ""
+                            } ?: "",
+                            isMain = currentRoute != NavConstants.profile
                         )
                     }
                 }
