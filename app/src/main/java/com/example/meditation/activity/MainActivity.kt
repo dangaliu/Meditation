@@ -19,6 +19,8 @@ import com.example.meditation.composable.component.AppBottomNavigation
 import com.example.meditation.composable.component.AppTopBar
 import com.example.meditation.composable.screen.main.viewmodel.MainFactory
 import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
+import com.example.meditation.composable.screen.profile.viewmodel.ProfileFactory
+import com.example.meditation.composable.screen.profile.viewmodel.ProfileViewModel
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInFactory
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
 import com.example.meditation.composable.screen.splash.view.viewmodel.SplashFactory
@@ -62,7 +64,10 @@ class MainActivity : ComponentActivity() {
         val splashFactory = SplashFactory(prefRepository)
         val splashViewModel = ViewModelProvider(this, splashFactory)[SplashViewModel::class.java]
 
-        val bottomItems = listOf<String>(
+        val profileFactory = ProfileFactory(prefRepository = prefRepository)
+        val profileViewModel = ViewModelProvider(this, profileFactory)[ProfileViewModel::class.java]
+
+        val bottomItems = listOf(
             "main", "music", "profile"
         )
 
@@ -105,7 +110,8 @@ class MainActivity : ComponentActivity() {
                     signInViewModel = signInViewModel,
                     mainViewModel = mainViewModel,
                     splashViewModel = splashViewModel,
-                    prefRepository = prefRepository
+                    prefRepository = prefRepository,
+                    profileViewModel = profileViewModel
                 )
             }
         }

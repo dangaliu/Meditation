@@ -11,6 +11,7 @@ import com.example.meditation.composable.screen.menu.view.MenuScreen
 import com.example.meditation.composable.screen.music.view.MusicScreen
 import com.example.meditation.composable.screen.onboarding.view.OnBoardingScreen
 import com.example.meditation.composable.screen.profile.view.ProfileScreen
+import com.example.meditation.composable.screen.profile.viewmodel.ProfileViewModel
 import com.example.meditation.composable.screen.registration.view.RegistrationScreen
 import com.example.meditation.composable.screen.sign_in.view.SignInScreen
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
@@ -24,7 +25,8 @@ fun Navigation(
     signInViewModel: SignInViewModel,
     mainViewModel: MainViewModel,
     splashViewModel: SplashViewModel,
-    prefRepository: PrefRepository
+    prefRepository: PrefRepository,
+    profileViewModel: ProfileViewModel
 ) {
     NavHost(
         navController = navController,
@@ -65,7 +67,7 @@ fun Navigation(
         composable(route = NavConstants.profile) {
             ProfileScreen(
                 navController = navController,
-                prefRepository = prefRepository
+                profileViewModel = profileViewModel
             )
         }
     }

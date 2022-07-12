@@ -1,5 +1,6 @@
 package com.example.meditation.composable.component
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,12 +18,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.meditation.model.dto.GalleryImage
 import com.example.meditation.ui.theme.appFontFamily
 
 @Composable
 fun GalleryImageComponent(
-    modifier: Modifier = Modifier.size(153.dp, 115.dp),
+    modifier: Modifier = Modifier.size(110.dp, 110.dp),
     galleryImage: GalleryImage
 ) {
     Surface(
@@ -30,8 +32,8 @@ fun GalleryImageComponent(
         shape = RoundedCornerShape(20.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                bitmap = galleryImage.image.asImageBitmap(),
+            AsyncImage(
+                model = Uri.parse(galleryImage.imageUri),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop

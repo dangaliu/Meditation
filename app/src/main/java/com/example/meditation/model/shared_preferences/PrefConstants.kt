@@ -6,4 +6,5 @@ object PrefConstants {
     const val PREF_PASSWORD = "PREF_PASSWORD"
     const val PREF_NAME = "PREF_NAME"
     const val PREF_AVATAR = "PREF_AVATAR"
+    const val PREF_IMAGES = "PREF_IMAGES"
 }
