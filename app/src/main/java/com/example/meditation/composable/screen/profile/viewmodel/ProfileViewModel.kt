@@ -1,17 +1,32 @@
 package com.example.meditation.composable.screen.profile.viewmodel
 
+import android.content.Context
+import android.content.ContextWrapper
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.meditation.model.dto.GalleryImage
 import com.example.meditation.model.shared_preferences.PrefRepository
+import java.io.File
+import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 class ProfileViewModel(
     private val prefRepository: PrefRepository
 ) : ViewModel() {
 
-    private val imagesMutable = MutableLiveData<MutableList<GalleryImage>>(mutableListOf())
-    val images: LiveData<MutableList<GalleryImage>> = imagesMutable
+    private val imagesMutable = MutableLiveData<SnapshotStateList<GalleryImage>>()
+    val images: LiveData<SnapshotStateList<GalleryImage>> = imagesMutable
+
+    private val imageFilesMutable = MutableLiveData<SnapshotStateList<File>>()
+    val imageFiles: LiveData<SnapshotStateList<File>> = imageFilesMutable
 
     fun getSavedImages(): List<GalleryImage> {
         return prefRepository.getList()
@@ -22,8 +37,45 @@ class ProfileViewModel(
         prefRepository.saveList(images)
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun saveToStorage(context: Context, bitmap: Bitmap) {
+        val localTime = LocalDateTime.now()
+        val cw = ContextWrapper(context)
+        val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
+        val file = File(directory, "photo_${localTime.nano}.jpg")
+        if (!file.exists()) {
+            val fos: FileOutputStream?
+            try {
+                fos = FileOutputStream(file)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                fos.flush()
+                fos.close()
+                val success = imageFilesMutable.value?.add(file)
+                imagesMutable.value?.add(
+                    GalleryImage(
+                        "${localTime.hour}:${localTime.minute}",
+                        bitmapFromFile(file)
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun getFiles(context: Context) {
+        val cw = ContextWrapper(context)
+        val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
+        imageFilesMutable.value = directory.listFiles().toMutableList().toMutableStateList()
+    }
+
+    fun bitmapFromFile(file: File): Bitmap {
+        return BitmapFactory.decodeFile(file.path)
+    }
+
     fun addImage(image: GalleryImage) {
-       imagesMutable.value?.add(image)
+        imagesMutable.value?.add(image)
     }
 
     fun getAvatar(): String {

@@ -42,7 +42,9 @@ fun ProfileScreen(
     val context = LocalContext.current
     var localTime = LocalDateTime.now()
 
-    val images = profileViewModel.images.observeAsState(arrayListOf()).value.toMutableStateList()
+    profileViewModel.getFiles(context)
+
+    val files = profileViewModel.imageFiles.observeAsState(listOf()).value
 
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -50,14 +52,7 @@ fun ProfileScreen(
             if (uri != null) {
                 val source = ImageDecoder.createSource(context.contentResolver, uri)
                 val bitmap = ImageDecoder.decodeBitmap(source)
-                localTime = LocalDateTime.now()
-                profileViewModel.addImage(
-                    GalleryImage(
-                        time = "${localTime.hour}:${localTime.minute}", bitmap = bitmap
-                    )
-                )
-                Log.d("images", profileViewModel.images.value.toString())
-                Log.d("images", images.toList().toString())
+                profileViewModel.saveToStorage(context, bitmap)
             }
         }
     )
@@ -89,8 +84,13 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            items(images.size) { index ->
-                GalleryImageComponent(galleryImage = images[index])
+            items(files.size) { index ->
+                GalleryImageComponent(
+                    galleryImage = GalleryImage(
+                        "${localTime.hour}:${localTime.minute}",
+                        profileViewModel.bitmapFromFile(files[index])
+                    )
+                )
             }
             item {
                 AddComponent(
