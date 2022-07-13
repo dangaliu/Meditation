@@ -30,6 +30,8 @@ import com.example.meditation.composable.screen.profile.viewmodel.ProfileViewMod
 import com.example.meditation.model.dto.GalleryImage
 import com.example.meditation.ui.theme.appFontFamily
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 @SuppressLint("MutableCollectionMutableState", "NewApi")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -85,9 +87,20 @@ fun ProfileScreen(
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             items(files.size) { index ->
+                val file = files[index]
+                val fileName = file.path.split("/").last().toString()
+                val epochSeconds =
+                    fileName.split(".").toString().trim(']', '[').split(",").first().substring(6)
+                Log.d("fileName", fileName)
+                Log.d("epochSeconds", epochSeconds)
+                localTime = LocalDateTime.ofEpochSecond(
+                    epochSeconds.toLong(),
+                    0,
+                    ZoneOffset.UTC
+                )
                 GalleryImageComponent(
                     galleryImage = GalleryImage(
-                        "${localTime.hour}:${localTime.minute}",
+                        "${localTime.hour + 2}:${localTime.minute}",
                         profileViewModel.bitmapFromFile(files[index])
                     )
                 )

@@ -17,6 +17,7 @@ import com.example.meditation.model.shared_preferences.PrefRepository
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class ProfileViewModel(
     private val prefRepository: PrefRepository
@@ -43,7 +44,8 @@ class ProfileViewModel(
         val localTime = LocalDateTime.now()
         val cw = ContextWrapper(context)
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
-        val file = File(directory, "photo_${localTime.nano}.jpg")
+        val zoneOffset = ZoneOffset.UTC
+        val file = File(directory, "photo_${localTime.toEpochSecond(zoneOffset)}.jpg")
         if (!file.exists()) {
             val fos: FileOutputStream?
             try {
@@ -52,12 +54,6 @@ class ProfileViewModel(
                 fos.flush()
                 fos.close()
                 val success = imageFilesMutable.value?.add(file)
-                imagesMutable.value?.add(
-                    GalleryImage(
-                        "${localTime.hour}:${localTime.minute}",
-                        bitmapFromFile(file)
-                    )
-                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
