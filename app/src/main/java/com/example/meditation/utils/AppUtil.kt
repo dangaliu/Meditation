@@ -22,4 +22,6 @@ object AppUtil {
     fun getUriFromAsset(fileName: String): Uri {
         return Uri.fromFile(File("//android_asset/$fileName"))
     }
+
+    val imagesDirPath = "/data/data/com.example.meditation/app_imageDir/"
 }

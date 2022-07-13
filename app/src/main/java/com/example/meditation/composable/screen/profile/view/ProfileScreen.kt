@@ -1,6 +1,9 @@
 package com.example.meditation.composable.screen.profile.view
 
+import android.annotation.SuppressLint
+import android.graphics.ImageDecoder
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -9,9 +12,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.meditation.composable.component.AddComponent
@@ -28,9 +29,9 @@ import com.example.meditation.composable.component.GalleryImageComponent
 import com.example.meditation.composable.screen.profile.viewmodel.ProfileViewModel
 import com.example.meditation.model.dto.GalleryImage
 import com.example.meditation.ui.theme.appFontFamily
-import java.io.File
 import java.time.LocalDateTime
 
+@SuppressLint("MutableCollectionMutableState", "NewApi")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileScreen(
@@ -38,22 +39,25 @@ fun ProfileScreen(
     profileViewModel: ProfileViewModel
 ) {
 
-    val images = profileViewModel.images.observeAsState(profileViewModel.getSavedImages()).value.toMutableStateList()
     val context = LocalContext.current
+    var localTime = LocalDateTime.now()
+
+    val images = profileViewModel.images.observeAsState(arrayListOf()).value.toMutableStateList()
 
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
-            val localTime = LocalDateTime.now()
-            val file = File(uri.toString())
             if (uri != null) {
+                val source = ImageDecoder.createSource(context.contentResolver, uri)
+                val bitmap = ImageDecoder.decodeBitmap(source)
+                localTime = LocalDateTime.now()
                 profileViewModel.addImage(
                     GalleryImage(
-                        localTime.hour.toString() + ":" + localTime.minute.toString(),
-                        file.toUri().toString()
+                        time = "${localTime.hour}:${localTime.minute}", bitmap = bitmap
                     )
                 )
-                profileViewModel.saveImages()
+                Log.d("images", profileViewModel.images.value.toString())
+                Log.d("images", images.toList().toString())
             }
         }
     )

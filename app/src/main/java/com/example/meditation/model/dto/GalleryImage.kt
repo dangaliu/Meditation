@@ -5,5 +5,5 @@ import android.net.Uri
 
 data class GalleryImage(
     val time: String,
-    val imageUri: String
+    val bitmap: Bitmap?
 )

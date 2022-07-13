@@ -1,6 +1,5 @@
 package com.example.meditation.composable.component
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,22 +31,24 @@ fun GalleryImageComponent(
         shape = RoundedCornerShape(20.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            AsyncImage(
-                model = Uri.parse(galleryImage.imageUri),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-            Text(
-                text = galleryImage.time,
-                fontSize = 18.sp,
-                fontFamily = appFontFamily,
-                fontWeight = FontWeight.Medium,
-                color = Color.White,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 17.dp, bottom = 18.dp)
-            )
+            if (galleryImage.bitmap != null) {
+                Image(
+                    bitmap = galleryImage.bitmap.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                Text(
+                    text = galleryImage.time,
+                    fontSize = 18.sp,
+                    fontFamily = appFontFamily,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = 17.dp, bottom = 18.dp)
+                )
+            }
         }
     }
 }
