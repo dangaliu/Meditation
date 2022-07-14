@@ -8,12 +8,15 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,8 +32,11 @@ import com.example.meditation.composable.component.GalleryImageComponent
 import com.example.meditation.composable.screen.profile.viewmodel.ProfileViewModel
 import com.example.meditation.model.dto.GalleryImage
 import com.example.meditation.ui.theme.appFontFamily
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 
 @SuppressLint("MutableCollectionMutableState", "NewApi")
@@ -42,11 +48,9 @@ fun ProfileScreen(
 ) {
 
     val context = LocalContext.current
-    var localTime = LocalDateTime.now()
 
     profileViewModel.getFiles(context)
-
-    val files = profileViewModel.imageFiles.observeAsState(listOf()).value
+    val files = profileViewModel.imageFiles.collectAsState().value
 
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -61,7 +65,8 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .padding(horizontal = 26.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(25.dp))
@@ -81,37 +86,43 @@ fun ProfileScreen(
             color = Color.White
         )
         Spacer(Modifier.height(10.dp))
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+        FlowRow(
+            mainAxisSpacing = 20.dp,
+            crossAxisSpacing = 15.dp,
+            modifier = Modifier.fillMaxWidth(),
+            mainAxisSize = SizeMode.Wrap,
+            mainAxisAlignment = FlowMainAxisAlignment.Start,
+            crossAxisAlignment = FlowCrossAxisAlignment.Center
         ) {
-            items(files.size) { index ->
-                val file = files[index]
+            files.forEachIndexed { index, file ->
                 val fileName = file.path.split("/").last().toString()
                 val epochSeconds =
                     fileName.split(".").toString().trim(']', '[').split(",").first().substring(6)
                 Log.d("fileName", fileName)
                 Log.d("epochSeconds", epochSeconds)
-                localTime = LocalDateTime.ofEpochSecond(
+                val localTime = LocalDateTime.ofEpochSecond(
                     epochSeconds.toLong(),
                     0,
                     ZoneOffset.UTC
                 )
+                val hour = if (localTime.hour < 10) "0${localTime.hour}" else "${localTime.hour}"
+                val minute =
+                    if (localTime.minute < 10) "0${localTime.minute}" else "${localTime.minute}"
+
                 GalleryImageComponent(
                     galleryImage = GalleryImage(
-                        "${localTime.hour + 2}:${localTime.minute}",
+                        "${hour}:${minute}",
                         profileViewModel.bitmapFromFile(files[index])
-                    )
+                    ),
+                    modifier = Modifier.size(169.dp, 110.dp)
                 )
             }
-            item {
-                AddComponent(
-                    onClick = {
-                        imagePicker.launch("image/*")
-                    }
-                )
-            }
+            AddComponent(
+                onClick = {
+                    imagePicker.launch("image/*")
+                },
+                modifier = Modifier.size(169.dp, 110.dp)
+            )
         }
     }
 }

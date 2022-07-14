@@ -5,15 +5,18 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.meditation.model.dto.GalleryImage
 import com.example.meditation.model.shared_preferences.PrefRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDateTime
@@ -26,8 +29,8 @@ class ProfileViewModel(
     private val imagesMutable = MutableLiveData<SnapshotStateList<GalleryImage>>()
     val images: LiveData<SnapshotStateList<GalleryImage>> = imagesMutable
 
-    private val imageFilesMutable = MutableLiveData<SnapshotStateList<File>>()
-    val imageFiles: LiveData<SnapshotStateList<File>> = imageFilesMutable
+    private val imageFilesMutable = MutableStateFlow<MutableList<File>>(mutableListOf())
+    val imageFiles: StateFlow<MutableList<File>> = imageFilesMutable
 
     fun getSavedImages(): List<GalleryImage> {
         return prefRepository.getList()
@@ -53,7 +56,7 @@ class ProfileViewModel(
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
                 fos.flush()
                 fos.close()
-                val success = imageFilesMutable.value?.add(file)
+                imageFilesMutable.value.add(file)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -63,7 +66,11 @@ class ProfileViewModel(
     fun getFiles(context: Context) {
         val cw = ContextWrapper(context)
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
-        imageFilesMutable.value = directory.listFiles().toMutableList().toMutableStateList()
+        viewModelScope.launch {
+            if (imageFilesMutable.value.size != directory.listFiles().size) {
+                imageFilesMutable.emit(directory.listFiles().toMutableList().toMutableStateList())
+            }
+        }
     }
 
     fun bitmapFromFile(file: File): Bitmap {
