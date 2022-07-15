@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.LiveData
@@ -29,8 +30,8 @@ class ProfileViewModel(
     private val imagesMutable = MutableLiveData<SnapshotStateList<GalleryImage>>()
     val images: LiveData<SnapshotStateList<GalleryImage>> = imagesMutable
 
-    private val imageFilesMutable = MutableStateFlow<MutableList<File>>(mutableListOf())
-    val imageFiles: StateFlow<MutableList<File>> = imageFilesMutable
+    private val imageFilesMutable = MutableStateFlow<SnapshotStateList<File>>(mutableStateListOf())
+    val imageFiles: StateFlow<SnapshotStateList<File>> = imageFilesMutable
 
     fun getSavedImages(): List<GalleryImage> {
         return prefRepository.getList()
@@ -67,7 +68,7 @@ class ProfileViewModel(
         val cw = ContextWrapper(context)
         val directory = cw.getDir("imageDir", Context.MODE_PRIVATE)
         viewModelScope.launch {
-            if (imageFilesMutable.value.size != directory.listFiles().size) {
+            if (imageFilesMutable.value.size != directory.listFiles().toMutableList().toMutableStateList().size) {
                 imageFilesMutable.emit(directory.listFiles().toMutableList().toMutableStateList())
             }
         }

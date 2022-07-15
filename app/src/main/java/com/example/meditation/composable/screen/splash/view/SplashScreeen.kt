@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.meditation.R
-import com.example.meditation.composable.screen.splash.view.viewmodel.SplashViewModel
+import com.example.meditation.composable.screen.splash.viewmodel.SplashViewModel
 import com.example.meditation.navigation.NavConstants
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

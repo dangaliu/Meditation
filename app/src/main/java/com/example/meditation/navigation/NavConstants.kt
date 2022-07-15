@@ -8,8 +8,9 @@ object NavConstants {
     const val main = "main"
     const val registration = "registration"
     const val menu = "menu"
+    const val photo = "photo"
 
-    const val avatarRes = "avatarRes"
+    const val fileName = "fileName"
 
     const val music = "music"
     const val profile = "profile"

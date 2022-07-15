@@ -1,4 +1,4 @@
-package com.example.meditation.composable.screen.splash.view.viewmodel
+package com.example.meditation.composable.screen.splash.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,18 +18,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.example.meditation.model.dto.GalleryImage
 import com.example.meditation.ui.theme.appFontFamily
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GalleryImageComponent(
     modifier: Modifier = Modifier.size(110.dp, 110.dp),
-    galleryImage: GalleryImage
+    galleryImage: GalleryImage,
+    onClick: () -> Unit = {}
 ) {
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
+        onClick = { onClick() }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             if (galleryImage.bitmap != null) {

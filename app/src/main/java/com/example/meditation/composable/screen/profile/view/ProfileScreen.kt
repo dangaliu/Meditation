@@ -31,6 +31,7 @@ import com.example.meditation.composable.component.AddComponent
 import com.example.meditation.composable.component.GalleryImageComponent
 import com.example.meditation.composable.screen.profile.viewmodel.ProfileViewModel
 import com.example.meditation.model.dto.GalleryImage
+import com.example.meditation.navigation.NavConstants
 import com.example.meditation.ui.theme.appFontFamily
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
@@ -65,11 +66,11 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .padding(horizontal = 26.dp)
+            .padding(top = 25.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(25.dp))
         AsyncImage(
             model = profileViewModel.getAvatar(),
             contentDescription = profileViewModel.getName(),
@@ -114,7 +115,10 @@ fun ProfileScreen(
                         "${hour}:${minute}",
                         profileViewModel.bitmapFromFile(files[index])
                     ),
-                    modifier = Modifier.size(169.dp, 110.dp)
+                    modifier = Modifier.size(169.dp, 110.dp),
+                    onClick = {
+                        navController.navigate("${NavConstants.photo}/$fileName")
+                    }
                 )
             }
             AddComponent(

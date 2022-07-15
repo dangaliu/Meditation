@@ -1,9 +1,11 @@
 package com.example.meditation.activity
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,12 +21,13 @@ import com.example.meditation.composable.component.AppBottomNavigation
 import com.example.meditation.composable.component.AppTopBar
 import com.example.meditation.composable.screen.main.viewmodel.MainFactory
 import com.example.meditation.composable.screen.main.viewmodel.MainViewModel
+import com.example.meditation.composable.screen.photo.viewmodel.PhotoViewModel
 import com.example.meditation.composable.screen.profile.viewmodel.ProfileFactory
 import com.example.meditation.composable.screen.profile.viewmodel.ProfileViewModel
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInFactory
 import com.example.meditation.composable.screen.sign_in.viewmodel.SignInViewModel
-import com.example.meditation.composable.screen.splash.view.viewmodel.SplashFactory
-import com.example.meditation.composable.screen.splash.view.viewmodel.SplashViewModel
+import com.example.meditation.composable.screen.splash.viewmodel.SplashFactory
+import com.example.meditation.composable.screen.splash.viewmodel.SplashViewModel
 import com.example.meditation.model.MainModel
 import com.example.meditation.model.SignInModel
 import com.example.meditation.model.shared_preferences.PrefRepository
@@ -35,6 +38,7 @@ import com.example.meditation.ui.theme.MeditationTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -44,6 +48,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @Composable
     fun App() {
@@ -66,6 +71,8 @@ class MainActivity : ComponentActivity() {
 
         val profileFactory = ProfileFactory(prefRepository = prefRepository)
         val profileViewModel = ViewModelProvider(this, profileFactory)[ProfileViewModel::class.java]
+
+        val photoViewModel = ViewModelProvider(this)[PhotoViewModel::class.java]
 
         val bottomItems = listOf(
             "main", "music", "profile"
@@ -111,7 +118,8 @@ class MainActivity : ComponentActivity() {
                     mainViewModel = mainViewModel,
                     splashViewModel = splashViewModel,
                     prefRepository = prefRepository,
-                    profileViewModel = profileViewModel
+                    profileViewModel = profileViewModel,
+                    photoViewModel = photoViewModel
                 )
             }
         }
